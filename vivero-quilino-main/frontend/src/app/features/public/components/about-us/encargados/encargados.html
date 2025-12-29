@@ -1,0 +1,208 @@
+<!-- SECCIÓN 4: ENCARGADOS -->
+<div class="bg-[#EACDCD] py-24 px-8 lg:px-20 text-[#0E1E2C]">
+  <h2 class="text-3xl font-semibold text-center mb-16 text-[#6B5CC6]">
+    Nuestros Encargados
+  </h2>
+
+  <div class="flex flex-col lg:flex-row justify-center items-center gap-16">
+
+    <!-- ENCARGADO 1 -->
+    <div class="flex flex-col items-center text-center max-w-sm relative">
+
+      @if (authService.isAuthenticated()) {
+        <button
+          (click)="abrirEdicion(encargado1!)"
+          class="absolute top-0 right-0 px-3 py-1 bg-[#6B5CC6] text-white text-xs rounded shadow hover:bg-[#5848b3]">
+          Editar Encargado
+        </button>
+      }
+
+      <img
+        [src]="encargado1?.foto"
+        [alt]="encargado1?.nombre"
+        class="w-64 h-64 object-cover rounded-full mb-6 shadow-lg border-4 border-white">
+
+      <h3 class="text-2xl font-semibold mb-2">
+        {{ encargado1?.nombre }}
+      </h3>
+
+      <p class="text-[#7A7A7A]">
+        {{ encargado1?.descripcion }}
+      </p>
+    </div>
+
+    <!-- ENCARGADO 2 -->
+    <div class="flex flex-col items-center text-center max-w-sm relative">
+
+      @if (authService.isAuthenticated()) {
+        <button
+          (click)="abrirEdicion(encargado2!)"
+          class="absolute top-0 right-0 px-3 py-1 bg-[#6B5CC6] text-white text-xs rounded shadow hover:bg-[#5848b3]">
+          Editar Encargado
+        </button>
+      }
+
+      <img
+        [src]="encargado2?.foto"
+        [alt]="encargado2?.nombre"
+        class="w-64 h-64 object-cover rounded-full mb-6 shadow-lg border-4 border-white">
+
+      <h3 class="text-2xl font-semibold mb-2">
+        {{ encargado2?.nombre }}
+      </h3>
+
+      <p class="text-[#7A7A7A]">
+        {{ encargado2?.descripcion }}
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL DE EDICIÓN -->
+@if (editando) {
+<div class="fixed inset-0 py-24 z-[50] flex items-start justify-center p-3 sm:p-4 overflow-y-auto">
+
+  <!-- Overlay -->
+  <div
+    (click)="cerrarEdicion()"
+    class="absolute inset-0 bg-black/50 backdrop-blur-sm">
+  </div>
+
+  <!-- Modal -->
+  <div
+    class="relative bg-white rounded-lg shadow-2xl w-full max-w-xl z-10
+           max-h-[90vh] overflow-y-auto">
+
+    <!-- Header -->
+    <div
+      class="px-4 py-3 sm:px-6 sm:py-4 border-b border-[#D7E2DB]
+             bg-[#F6FBF8] sticky top-0 z-10">
+      <div class="flex items-center justify-between gap-2">
+        <h3 class="text-base sm:text-lg font-bold text-[#1C2B21]">
+          Editar Encargado
+        </h3>
+
+        <button
+          (click)="cerrarEdicion()"
+          class="text-[#4A5C52] hover:text-[#1C2B21] transition-colors">
+          <span class="material-symbols-outlined text-xl sm:text-2xl">
+            close
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="px-4 py-4 sm:px-6 sm:py-6 space-y-5">
+
+      <!-- Nombre -->
+      <div>
+        <label class="block text-xs sm:text-sm font-medium text-[#1C2B21] mb-1.5">
+          Nombre del encargado
+        </label>
+        <p class="text-xs text-[#4A5C52] mb-2">
+          Nombre y apellido de la persona encargada.
+        </p>
+        <input
+          [(ngModel)]="formEncargado.nombre"
+          placeholder="Ej: Juan Pérez"
+          class="w-full px-3 py-2.5 text-sm border border-[#D7E2DB] rounded-md
+                 focus:ring-2 focus:ring-[#4B7D63] focus:border-transparent
+                 outline-none transition-all text-[#1C2B21]
+                 placeholder-[#9CA8A1]" />
+      </div>
+
+      <!-- Descripción -->
+      <div>
+        <label class="block text-xs sm:text-sm font-medium text-[#1C2B21] mb-1.5">
+          Descripción
+        </label>
+        <p class="text-xs text-[#4A5C52] mb-2">
+          Breve descripción del rol, experiencia o tarea principal.
+        </p>
+        <textarea
+          [(ngModel)]="formEncargado.descripcion"
+          placeholder="Ej: Encargado del vivero y producción diaria..."
+          class="w-full px-3 py-2.5 text-sm border border-[#D7E2DB] rounded-md
+                 focus:ring-2 focus:ring-[#4B7D63] focus:border-transparent
+                 outline-none transition-all text-[#1C2B21]
+                 placeholder-[#9CA8A1]
+                 min-h-[110px]">
+        </textarea>
+      </div>
+
+      <!-- Foto -->
+      <div>
+        <label class="block text-xs sm:text-sm font-medium text-[#1C2B21] mb-1.5">
+          Foto (URL)
+        </label>
+        <p class="text-xs text-[#4A5C52] mb-2">
+          URL de la imagen que se mostrará en la sección pública.
+        </p>
+        <input
+          [(ngModel)]="formEncargado.foto"
+          placeholder="https://..."
+          class="w-full px-3 py-2.5 text-sm border border-[#D7E2DB] rounded-md
+                 focus:ring-2 focus:ring-[#4B7D63] focus:border-transparent
+                 outline-none transition-all text-[#1C2B21]
+                 placeholder-[#9CA8A1]" />
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="px-4 py-3 sm:px-6 sm:py-4 border-t border-[#D7E2DB]
+             bg-[#F6FBF8] flex justify-end gap-3">
+
+      <button
+        (click)="cerrarEdicion()"
+        class="px-4 py-2 text-sm rounded-md
+               bg-[#E5ECE8] text-[#1C2B21]
+               hover:bg-[#D7E2DB] transition-colors">
+        Cancelar
+      </button>
+
+      <button
+        (click)="guardarCambios()"
+        class="px-4 py-2 text-sm rounded-md
+               bg-[#4B7D63] text-white
+               hover:bg-[#3E6B54] transition-colors">
+        Guardar cambios
+      </button>
+    </div>
+
+  </div>
+</div>
+}
+
+
+<!-- MODAL RESULTADO -->
+@if (mostrarModalResultado) {
+<div class="fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-black/20"></div>
+
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+      <p class="text-lg font-semibold mb-4">
+        {{ modalMensaje }}
+      </p>
+      <button
+        (click)="cerrarModalResultado()"
+        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- CIERRE -->
+<div class="bg-[#799f7f] text-white py-20 px-8 text-center">
+  <h2 class="text-4xl font-bold mb-4">Cuidamos lo que crece 🌱</h2>
+  <p class="max-w-2xl mx-auto text-lg text-black">
+    Nuestra misión es mantener viva la conexión entre la comunidad y la tierra,
+    promoviendo la producción sustentable y la educación ambiental.
+  </p>
+</div>

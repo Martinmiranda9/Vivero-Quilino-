@@ -1,0 +1,130 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { CategoriaProductoService } from '../../../../core/service/categoria_producto.service';
+import { Categoria_producto } from '../../../../core/models/categoria_producto.models';
+import { CommonModule } from '@angular/common';
+import { ProductoService } from '../../../../core/service/producto.service';
+import { Producto } from '../../../../core/models/producto.model';
+
+@Component({
+  selector: 'app-section-product',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './section-product.html'
+})
+export class SectionProduct {
+  categorias : Categoria_producto[] = [];
+  errorMessage: string = '';
+  loading: boolean = true;
+  productos : Producto[] = [];
+
+  currentIndex: number = 0;
+  touchStartX: number = 0;
+  touchEndX: number = 0;
+
+
+  constructor(private categoriaService : CategoriaProductoService, private router: Router, private productoService : ProductoService) {}
+
+  ngOnInit():void {
+    this.loadCategorias();
+    this.loadProducts();
+  }
+
+  loadCategorias() {
+    this.loading = true;
+    this.categoriaService.getAll().subscribe({
+      next: res => {
+        this.categorias = res;
+        this.loading = false;
+        if (this.categorias.length === 0) {
+          this.errorMessage = 'No se han encontrado categorías de productos.';
+        }
+      },
+      error: err => {
+        this.loading = false;
+        this.errorMessage = err?.error?.message || 'Error al cargar las categorías. Intente más tarde.';
+      }
+    });
+  }
+
+  loadProducts(){
+    this.loading = true;
+    this.productoService.getAll().subscribe({
+      next: res => {
+        this.productos = res.filter(p => p.esta_activo !== false);
+        this.loading = false;
+        if (this.productos.length === 0){
+          this.errorMessage = 'No se han encontrado productos.';
+        }
+      },
+      error: err => {
+        this.loading = false;
+        this.errorMessage = err?.error?.message || 'Error al cargar los productos. Intente más tarde.';
+      }
+
+    })
+  }
+
+  goToCategory(categoryId: number) {
+  if (!Array.isArray(this.productos)) {
+    //console.error('Error: this.productos no es un array', this.productos);
+    this.router.navigate(['/productos', categoryId]);
+    return;
+  }
+
+  const productsInCategory = this.productos.filter(
+    p => p.categoria_id === categoryId
+  );
+
+  if (productsInCategory.length === 0) {
+    console.warn(`No hay productos para la categoría ${categoryId}`);
+    this.router.navigate(['/productos', categoryId]);
+    return;
+  }
+
+  if (productsInCategory.length === 1) {
+    const producto = productsInCategory[0];
+    this.router.navigate(['/producto', producto.id]);
+  } else {
+    this.router.navigate(['/productos', categoryId]);
+  }
+}
+
+prevCategory() {
+  if (this.currentIndex > 0) {
+    this.currentIndex--;
+  } else {
+    this.currentIndex = this.categorias.length - 1;
+  }
+}
+
+nextCategory() {
+  if (this.currentIndex < this.categorias.length - 1) {
+    this.currentIndex++;
+  } else {
+    this.currentIndex = 0;
+  }
+}
+
+onTouchStart(event: TouchEvent) {
+  this.touchStartX = event.changedTouches[0].screenX;
+}
+
+onTouchEnd(event: TouchEvent) {
+  this.touchEndX = event.changedTouches[0].screenX;
+  this.handleSwipe();
+}
+
+handleSwipe() {
+  const deltaX = this.touchStartX - this.touchEndX;
+  if (Math.abs(deltaX) > 50) {
+    if (deltaX > 0) {
+      this.nextCategory();
+    } else {
+      this.prevCategory();
+    }
+  }
+}
+
+
+}

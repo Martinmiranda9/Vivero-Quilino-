@@ -1,0 +1,15 @@
+services:
+  angular-vivero:
+    build: .
+    ports:
+      - "4200:4200"   # Exponemos el puerto 4200 para desarrollo
+      #- "4200:80"   # Exponemos el 80 de NGINX en el puerto 4200 local - esto en modo producción
+    volumes:
+      - ./src:/app/src # Sincronizamos el código fuente para desarrollo continuamente
+    command: npx ng serve --host 0.0.0.0 --poll 2000 && echo '✅ Angular corriendo en http://localhost:4200'"
+    restart: always
+
+# NOTE: No se monta un volumen en /app/node_modules para evitar ocultar
+# los módulos instalados durante la etapa de build. Si necesita persistir
+# node_modules para desarrollo, instale dependencias dentro del contenedor
+# o use una estrategia alternativa.

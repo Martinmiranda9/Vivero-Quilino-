@@ -1,0 +1,59 @@
+# ---- General OS files ----
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ---- Node / Package Managers ----
+node_modules/
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ---- Build outputs ----
+dist/
+build/
+coverage/
+.nyc_output/
+tsconfig.tsbuildinfo
+
+# ---- Caches / Temp ----
+.cache/
+.tmp/
+tmp/
+temp/
+
+# ---- Angular ----
+.angular/
+frontend/.angular/
+
+# ---- Environment files ----
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# ---- IDE / Editors ----
+.vscode/
+.idea/
+.vs/
+*.code-workspace
+.history/
+
+# ---- Docker overrides ----
+docker-compose.override.yml
+*.local
+
+# ---- Upload/storage (if generated at runtime) ----
+uploads/
+storage/
+tmp/uploads/
+
+# ---- Test artifacts ----
+junit.xml

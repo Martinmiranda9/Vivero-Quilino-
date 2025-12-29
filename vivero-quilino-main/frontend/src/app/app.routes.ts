@@ -1,0 +1,48 @@
+import { Routes } from '@angular/router';
+import { authGuard } from './core/service/auth/auth.guard';
+
+export const routes: Routes = [
+
+      { path: '',
+        loadComponent: () => import('./features/public/public-layout/public-layout').then(m => m.PublicLayout),
+        children: [
+          { path: '', loadComponent: () => import ('./features/public/section-principal/section-principal').then(m => m.SectionPrincipal) },
+          { path: 'productos/:categoryId', loadComponent: () => import ('./features/public/components/product-list/product-list').then(m => m.ProductList)},
+          { path: 'producto/:id' , loadComponent: () => import ('./features/public/components/product-detail/product-detail').then(m => m.ProductDetail)},
+          { path: 'contacto' , loadComponent: () => import('./features/public/components/contact/contact').then(m => m.Contact) },
+          { path: 'sobre-nosotros' , loadComponent: () => import('./features/public/components/about-us/about-us').then(m => m.AboutUs) },
+          { path: 'servicio/:serviceId' , loadComponent: () => import('./features/public/components/service-detail/service-detail').then(m => m.ServiceDetail) },
+          { path: 'terminos-condiciones' , loadComponent: () => import('./features/public/components/terminos-condiciones/terminos-condiciones').then(m => m.TerminosCondiciones) },
+          { path: 'politicas-privacidad' , loadComponent: () => import('./features/public/components/politicas-privacidad/politicas-privacidad').then(m => m.PoliticasPrivacidad) }
+    ]
+      },
+      {
+        path: 'login' , loadComponent: () => import('./features/login/login').then(m => m.Login)
+      },
+      {
+        path: 'forgot-password' , loadComponent: () => import('./features/login/forgot-password/forgot-password').then(m => m.ForgotPassword)
+      },
+      {
+        path: 'reset-password' , loadComponent: () => import('./features/login/reset-password/reset-password').then(m => m.ResetPassword)
+      },
+      {
+        path: 'admin',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/admin/layout/admin-layout.component').then(m => m.AdminLayoutComponent),
+        children: [
+          { path: '', redirectTo: 'products', pathMatch: 'full' },
+          { path: 'products', loadComponent: () => import('./features/admin/products/listproducts/list-product.component').then(m => m.ListProductComponent) },
+          { path: 'products/add', loadComponent: () => import('./features/admin/products/addproduct/add-product.component').then(m => m.AddproductComponent) },
+          { path: 'products/edit/:id', loadComponent: () => import('./features/admin/products/editproduct/edit-product.component').then(m => m.EditproductComponent) },
+          { path: 'services', loadComponent: () => import('./features/admin/services/listservices/list-service.component').then(m => m.ListservicesComponent) },
+          { path: 'services/add', loadComponent: () => import('./features/admin/services/addservice/add-service.component').then(m => m.AddserviceComponent) },
+          { path: 'services/edit/:id', loadComponent: () => import('./features/admin/services/editservice/edit-service.component').then(m => m.EditserviceComponent) },
+          { path: 'images', loadComponent: () => import('./features/admin/images/shared-images/images.component').then(m => m.ImagesComponent) },
+          { path: 'images/services/:id', loadComponent: () => import('./features/admin/images/shared-images/forms/services-images-order-form.component').then(m => m.ServicesImagesOrderFormComponent) },
+          { path: 'images/products/:id', loadComponent: () => import('./features/admin/images/shared-images/forms/images-order-form.component').then(m => m.ImagesOrderFormComponent) },
+          { path: 'category', loadComponent: () => import('./features/admin/category/category.compoent').then(m => m.CategoryComponent) },
+          { path: 'seasons', loadComponent: () => import('./features/admin/seasons/seasons.component').then(m => m.SeasonsComponent) },
+        ]
+      }
+
+];

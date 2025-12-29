@@ -1,0 +1,59 @@
+services:
+  db:
+    image: postgres:16
+    container_name: vivero_db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend-prod:
+    build: .
+    container_name: vivero_backend_prod
+    restart: always
+    ports:
+      - "${PORT}:4000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+    command: ["npm", "start"]
+
+  backend-dev:
+    build: .
+    container_name: vivero_backend_dev
+    restart: always
+    ports:
+      - "4001:4000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev"]
+
+  seed:
+    build: .
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+    command: ["node", "dist/app/seeders/index.js"]
+
+volumes:
+  db_data:
